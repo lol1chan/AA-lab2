@@ -24,7 +24,7 @@ public:
 class Encoder:Base64 {
 
 private:
-
+	std::string comments;
 public:
 	
 	void EncodeTriplet(const std::string& triplet);
@@ -32,6 +32,7 @@ public:
 	void EncodeSymbol(const char& symbol);
 	void EncodeFile(const std::string& FilePath);
 	void DataToFile(const std::string& FilePath);
+	void addCommentary(const std::string& com);
 	void ClearCoded();
 };
 

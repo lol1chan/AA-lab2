@@ -184,35 +184,43 @@ int Decoder::DecodeFile(const std::string& FilePath) {
         return 1;
     }
 
-    char buffer[4];
-    while (inputFile.read(buffer, 4)) {
-        std::string quadruplet(buffer, inputFile.gcount());
+    std::string line;
+    while (std::getline(inputFile, line)) {
+        if (!line.empty() && line[0] == '-') {
+            continue;
+        }
 
-        std::string remaining(buffer, inputFile.gcount());
+        size_t pos = 0;
+        while (pos < line.size()) {
+            char buffer[4];
 
+            size_t readSize = std::min(line.size() - pos, sizeof(buffer));
+            line.copy(buffer, readSize, pos);
+            std::string quadruplet(buffer, readSize);
+            std::string remaining(buffer, readSize);
 
-            if ((remaining[2] == '=') && (remaining[3] == '=')) {
+            if (remaining[2] == '=' && remaining[3] == '=') {
                 remaining.erase(3);
                 remaining.erase(2);
                 DecodeSymbol(remaining);
-                continue;
+                break;
             }
             else if (remaining[3] == '=') {
                 remaining.erase(3);
                 DecodeDuplet(remaining);
-                continue;
-
+                break;
             }
 
-        
-        int result = DecodeTriplet(quadruplet);
-        if (result != 0) {
-            std::cerr << "Error decoding quadruplet in file: " << FilePath << std::endl;
-            inputFile.close();
-            return result;
+            int result = DecodeTriplet(quadruplet);
+            if (result != 0) {
+                std::cerr << "Error decoding quadruplet in file: " << FilePath << std::endl;
+                inputFile.close();
+                return result;
+            }
+
+            pos += readSize;
         }
     }
-
 
     inputFile.close();
     return 0;
@@ -224,6 +232,7 @@ void Encoder::DataToFile(const std::string& FilePath) {
         std::cerr << "Error opening file: " << FilePath << std::endl;
         return;
     }
+    coded += "\n" + comments;
 
     outputFile << coded;
 
@@ -250,19 +259,27 @@ void Decoder::ClearOutput() {
     output.clear();
 }
 
+void Encoder::addCommentary(const std::string& com) {
+    std::string comment = com.substr(0, 75);
+    comments += "-" + comment;
+}
+
 int main() {
+   
+
     Encoder encoder;
     Decoder decoder;
+
+    encoder.addCommentary("test this thing");
 
     encoder.EncodeFile("input.txt");
     encoder.DataToFile("encoded.txt");
     encoder.ClearCoded();
 
-    
 
     int decodeResult = decoder.DecodeFile("encoded.txt");
     if (decodeResult == 0) {
-        decoder.DataToFile("decoded.txt");
+        decoder.DataToFile("decoded.base64");
         decoder.ClearOutput();
     }
     else {
@@ -278,7 +295,7 @@ int main() {
 
     int decodeResultr = decoderr.DecodeFile("encoded1.txt");
     if (decodeResultr == 0) {
-        decoderr.DataToFile("decoded1.txt");
+        decoderr.DataToFile("decoded1.base64");
         decoderr.ClearOutput();
     }
     else {
@@ -294,7 +311,7 @@ int main() {
 
     int decodeResults = decoders.DecodeFile("encoded2.txt");
     if (decodeResults == 0) {
-        decoders.DataToFile("decoded2.txt");
+        decoders.DataToFile("decoded2.base64");
         decoders.ClearOutput();
     }
     else {
