@@ -273,13 +273,13 @@ int main() {
     encoder.addCommentary("test this thing");
 
     encoder.EncodeFile("input.txt");
-    encoder.DataToFile("encoded.txt");
+    encoder.DataToFile("encoded.base64");
     encoder.ClearCoded();
 
 
-    int decodeResult = decoder.DecodeFile("encoded.txt");
+    int decodeResult = decoder.DecodeFile("encoded.base64");
     if (decodeResult == 0) {
-        decoder.DataToFile("decoded.base64");
+        decoder.DataToFile("decoded.txt");
         decoder.ClearOutput();
     }
     else {
@@ -290,12 +290,12 @@ int main() {
     Decoder decoderr;
 
     encoderr.EncodeFile("input1.txt");
-    encoderr.DataToFile("encoded1.txt");
+    encoderr.DataToFile("encoded1.base64");
     encoderr.ClearCoded();
 
-    int decodeResultr = decoderr.DecodeFile("encoded1.txt");
+    int decodeResultr = decoderr.DecodeFile("encoded1.base64");
     if (decodeResultr == 0) {
-        decoderr.DataToFile("decoded1.base64");
+        decoderr.DataToFile("decoded1.txt");
         decoderr.ClearOutput();
     }
     else {
@@ -306,12 +306,12 @@ int main() {
     Decoder decoders;
 
     encoders.EncodeFile("input2.txt");
-    encoders.DataToFile("encoded2.txt");
+    encoders.DataToFile("encoded2.base64");
     encoders.ClearCoded();
 
-    int decodeResults = decoders.DecodeFile("encoded2.txt");
+    int decodeResults = decoders.DecodeFile("encoded2.base64");
     if (decodeResults == 0) {
-        decoders.DataToFile("decoded2.base64");
+        decoders.DataToFile("decoded2.txt");
         decoders.ClearOutput();
     }
     else {
