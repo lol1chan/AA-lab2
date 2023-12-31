@@ -25,6 +25,7 @@ class Encoder:Base64 {
 
 private:
 	std::string comments;
+	int lineLength;
 public:
 	
 	void EncodeTriplet(const std::string& triplet);

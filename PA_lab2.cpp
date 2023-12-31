@@ -8,6 +8,13 @@ Base64::Base64() {
 void Encoder :: EncodeTriplet(const std::string& triplet) {
     std::string result = "====";
 
+    
+    lineLength += 4;
+    if (lineLength >= 76) {
+        coded += '\n';
+        lineLength = 0;
+    }
+
     int k = triplet.at(0) >> 2;
     result.at(0) = alphabet.at(k);
 
@@ -29,6 +36,12 @@ void Encoder :: EncodeTriplet(const std::string& triplet) {
 void Encoder::EncodeDuplet(const std::string& duplet) {
     std::string result = "====";
 
+    lineLength += 3;
+    if (lineLength >= 76) {
+        coded += '\n';
+        lineLength = 0;
+    }
+
     int k = duplet.at(0) >> 2;
     result.at(0) = alphabet.at(k);
 
@@ -45,6 +58,12 @@ void Encoder::EncodeDuplet(const std::string& duplet) {
 
 void Encoder::EncodeSymbol(const char& symbol) {
     std::string result = "====";
+
+    lineLength += 2;
+    if (lineLength >= 76) {
+        coded += '\n';
+        lineLength = 0;
+    }
 
     int k = symbol >> 2;
     result.at(0) = alphabet.at(k);
